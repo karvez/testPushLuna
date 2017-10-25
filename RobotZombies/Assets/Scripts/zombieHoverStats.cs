@@ -16,9 +16,10 @@ public class zombieHoverStats : MonoBehaviour
     Vector3 startingPos;
     Vector3 screenPosition;
     bool displayStats = false;
+    string zombieType = "Fat";
 
-    private float zombieHealth = 3;
-    private string zombieStringHealth = "3";
+    private int zombieHealth = 3;
+    private string zombieStringHealth;
 
     zombieHoverStats zomb;
     Rigidbody2D rb;
@@ -36,6 +37,9 @@ public class zombieHoverStats : MonoBehaviour
         Physics.queriesHitTriggers = true;
         //zombieCurrentPos = this.transform.position;
         transform.position = startingPos;
+
+        zombieHealth = 3;
+        //string zombieStringHealth = zombieHealth.ToString();
     }
     void OnMouseOver()
     {
@@ -66,14 +70,14 @@ public class zombieHoverStats : MonoBehaviour
         if (displayStats == true)
          {
         //zombieCurrentPos = transform.position;
-        GUI.Box(new Rect(screenPosition.x-10, screenPosition.y-40, 100, 100), zombieStringHealth);
+        GUI.Box(new Rect(screenPosition.x, screenPosition.y+25, 100, 60), "Health: " + zombieHealth.ToString() + "\nType: " + zombieType);
         }
         
     }
     public void zombieStats()
     {
         zombieHealth = 3;
-        string zombieStringHealth = zombieHealth.ToString("3");
+     //   string zombieStringHealth = zombieHealth.ToString();
     }
 
 
