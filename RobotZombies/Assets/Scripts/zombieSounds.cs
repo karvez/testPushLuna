@@ -9,14 +9,14 @@ public class zombieSounds : MonoBehaviour {
    
 	// Use this for initialization
 	void Start () {
-		
+        audioSource = GetComponent<AudioSource>();
     }
 	
     void OnCollisionEnter2D(Collision2D coll)
     {
         if (coll.gameObject.tag == "Player")
         {
-            audioSource.PlayOneShot(zombieSquish);
+            audioSource.PlayOneShot(zombieSquish, 0.8F);
         }
     }
 
