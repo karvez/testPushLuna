@@ -12,8 +12,10 @@ public class BoidStats : MonoBehaviour {
     [SerializeField]AudioClip zombieDying;
     public Image Fill;
     public Texture sizeTexture;
+    public string[] zombieNames = { "Jack", "Amy", "Jim", "Jessica", "Hannah", "Frank" };
 
     private Slider zombieStatsSlider;
+    public string zombieName;
 
     public Color maxHealth = Color.green;
     public Color minHealth = Color.red;
@@ -40,11 +42,15 @@ public class BoidStats : MonoBehaviour {
     {
         displayStats = true;
     }
+
+   
     void OnMouseExit()
     {
         displayStats = false;
         zombieStatsSlider.gameObject.SetActive(false);
     }
+
+    
 
     void OnGUI()
     {
@@ -80,6 +86,7 @@ public class BoidStats : MonoBehaviour {
 
     public void generateStats()
     {
+        zombieName = (zombieNames.RandomItem());
         size = Random.Range(0.0f, 10.0f);
         wealth = Random.Range(0.0f, 10.0f);
         heatlh = Random.Range(0.0f, 10.0f);
@@ -138,6 +145,7 @@ public class BoidStats : MonoBehaviour {
         GameObject newBorn = Instantiate(boidPrefab, spawnLoc, Quaternion.identity);
 
         var nbStats = newBorn.GetComponent<BoidStats>();
+       // nbStats.zombieName = add name
         nbStats.size = Mathf.Max(0.0f, Mathf.Min(10.0f, (boid1.size + boid2.size / 2) + Random.Range(-0.1f, 0.1f)));
         nbStats.wealth = Mathf.Max(0.0f, Mathf.Min(10.0f, (boid1.wealth + boid2.wealth / 2) + Random.Range(-0.1f, 0.1f)));
         nbStats.heatlh = Mathf.Max(0.0f, Mathf.Min(10.0f, (boid1.heatlh + boid2.heatlh / 2) + Random.Range(-0.1f, 0.1f)));
@@ -170,5 +178,13 @@ public class BoidStats : MonoBehaviour {
         yield return new WaitForSeconds(3.0f);
         //obj.SetActive(false);
         yield return null;
+    }
+}
+public static class ArrayExtensions
+{
+    // This is an extension method. RandomItem() will now exist on all arrays.
+    public static T RandomItem<T>(this T[] array)
+    {
+        return array[Random.Range(0, array.Length)];
     }
 }
