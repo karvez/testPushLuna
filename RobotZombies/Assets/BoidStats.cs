@@ -1,12 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class BoidStats : MonoBehaviour {
 
+
     private bool displayStats = false;
     Vector3 screenPosition;
+    AudioSource audioSource;
+    [SerializeField]AudioClip zombieDying;
+    public Image Fill;
+    public Texture sizeTexture;
+
+    private Slider zombieStatsSlider;
+
+    public Color maxHealth = Color.green;
+    public Color minHealth = Color.red;
+    public float maxValue = 10.0f;
 
     [Range(0.0f, 10.0f)]
     public float size;          //fitness
@@ -17,10 +28,13 @@ public class BoidStats : MonoBehaviour {
     //[Range(0.0f, 10.0f)]
     public Color color;
 
+    
     [SerializeField]
     private MeshRenderer coloredRegion;
     public GameObject boidPrefab;
     public Transform hatPlace;
+
+    public bool squished = false;
 
     void OnMouseOver()
     {
@@ -29,21 +43,40 @@ public class BoidStats : MonoBehaviour {
     void OnMouseExit()
     {
         displayStats = false;
+        zombieStatsSlider.gameObject.SetActive(false);
     }
 
     void OnGUI()
     {
+
+        GUI.contentColor = Color.black;
         screenPosition = Camera.main.WorldToScreenPoint(transform.position);
         screenPosition.y = Screen.height - screenPosition.y;
 
-        if (displayStats == true)
-        {
+        //zombieStatsSlider
 
-            GUI.Box(new Rect(screenPosition.x, screenPosition.y + 25, 100, 60), "Size: " + size + "\nWealth: " + wealth + "\nHealth: " + health);
+        
+        if (displayStats == true && squished == false)
+        {
+            //GUI.Label(new Rect(screenPosition.x, screenPosition.y + 10, 50, 50), "Size");
+            // size = GUI.HorizontalSlider(new Rect(screenPosition.x, screenPosition.y + 25, 50, 50), size, 0.0f, 10.0f);
+
+
+            zombieStatsSlider.gameObject.SetActive(true);
+            zombieStatsSlider.value = size;
+            Fill.color = Color.Lerp(minHealth, maxHealth, (float)size / maxValue);
+
+
+
+           // GUI.Label(new Rect(screenPosition.x, screenPosition.y + 35, 50, 50), "Wealth");
+           // wealth = GUI.HorizontalSlider(new Rect(screenPosition.x, screenPosition.y + 50, 50, 50), wealth, 0.0f, 10.0f);
+
+           // GUI.Label(new Rect(screenPosition.x, screenPosition.y + 60, 50, 50), "Health");
+            //heatlh = GUI.HorizontalSlider(new Rect(screenPosition.x, screenPosition.y + 75, 50, 50), heatlh, 0.0f, 10.0f);
+
+            //GUI.Box(new Rect(screenPosition.x, screenPosition.y + 25, 110, 50), "Size: " + size + "\nWealth: " + wealth + "\nHealth: " + heatlh);
         }
     }
-
-    public bool squished = false;
 
     public void generateStats()
     {
@@ -85,12 +118,17 @@ public class BoidStats : MonoBehaviour {
         generateStats();
         ApplyStatsVisuals();
         hatSelect();
+        audioSource = GetComponent<AudioSource>();
+        zombieStatsSlider = gameObject.GetComponent<Slider>();
+
+        zombieStatsSlider.minValue = 0.0f;
+        zombieStatsSlider.maxValue = 10.0f;
 
     }
 
     // Update is called once per frame
     void Update() {
-
+  
     }
 
     public static GameObject breed(BoidStats boid1, BoidStats boid2, GameObject boidPrefab)
@@ -122,6 +160,7 @@ public class BoidStats : MonoBehaviour {
 
     public IEnumerator squash(GameObject obj)
     {
+        //audioSource.plyaf
         obj.transform.localScale = new Vector3(obj.transform.localScale.x, 0.01f, obj.transform.localScale.z);
         obj.transform.position = new Vector3(obj.transform.position.x, 0.01f, obj.transform.position.z);
         obj.transform.localRotation = Quaternion.identity;
